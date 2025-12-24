@@ -4,11 +4,12 @@ import asyncio
 
 app = Flask(__name__)
 
-# Dr. Atlas için uygun ses (Ahmet daha tok ve doktor gibi, Emel kadın sesi)
+# Dr. Atlas için uygun ses
 VOICE = "tr-TR-AhmetNeural"
 
 async def get_audio_stream(text):
-    communicate = edge-tts.Communicate(text, VOICE)
+    # HATA BURADAYDI: edge-tts yerine edge_tts (alt çizgi) olmalı
+    communicate = edge_tts.Communicate(text, VOICE)
     audio_data = b""
     async for chunk in communicate.stream():
         if chunk["type"] == "audio":
@@ -35,8 +36,5 @@ def tts_endpoint():
         # Sesi doğrudan mp3 verisi olarak döndür
         return Response(audio_bytes, mimetype="audio/mpeg")
     except Exception as e:
+        # Hata olursa ekrana yazdır ki görelim
         return str(e), 500
-
-# Vercel için gerekli (Localde test etmek istersen app.run kullanabilirsin)
-# if __name__ == '__main__':
-#     app.run(debug=True)
